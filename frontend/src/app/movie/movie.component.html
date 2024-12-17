@@ -1,0 +1,21 @@
+
+<div class="movie-details-container">
+  <!-- Movie Poster -->
+  <div class="movie-poster">
+    <img [src]="movie.movieImageUrl" alt="{{ movie.movieTitle }}">
+  </div>
+
+  <!-- Movie Information -->
+  <div class="movie-info-container">
+    <h1 class="movie-title">{{ movie.movieTitle }}</h1>
+    <p class="movie-description">{{ movie.movieDescription }}</p>
+
+    <div class="movie-meta">
+      <p><strong>Release Date:</strong> {{ movie.movieReleaseDate }}</p>
+      <p><strong>Genre:</strong> {{ movie.genreName }}</p>
+    </div>
+
+  </div>
+
+</div>
+

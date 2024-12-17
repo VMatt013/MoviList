@@ -1,0 +1,4 @@
+#!/bin/bash
+
+cd frontend && screen -S frontend -d -m ng serve
+cd ../backend && screen -S backend -d -m mvn spring-boot:run
