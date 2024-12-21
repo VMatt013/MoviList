@@ -4,6 +4,8 @@ import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { BackendService } from './services/backend.service';
+import { UserService } from './services/user.service';
 
 @Component({
   selector: 'app-root',
@@ -12,6 +14,18 @@ import { Router } from '@angular/router';
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
-export class AppComponent {
-  title = 'frontend';
+export class AppComponent implements OnInit {
+  userRole: string | null = null;
+  userId: string | null = null;
+
+
+  constructor(private userService: UserService) {}
+
+  ngOnInit(): void {
+    this.userRole = sessionStorage.getItem('role');
+    this.userService.isLoggedIn(this.userRole);
+  }
+
 }
+
+

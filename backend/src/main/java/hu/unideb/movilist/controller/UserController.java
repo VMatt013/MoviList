@@ -3,7 +3,6 @@ package hu.unideb.movilist.controller;
 import hu.unideb.movilist.data.entity.User;
 import hu.unideb.movilist.data.repository.UserRepository;
 import hu.unideb.movilist.service.UserService;
-import hu.unideb.movilist.service.dto.UserDto;
 
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +32,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public User getUser(@PathVariable("id") long id){
+    public User getUser(@PathVariable("id") int id){
 
         User user = userRepository.findById(id).orElseThrow(() ->
                 new RuntimeException("User not found with id: " + id));
@@ -42,14 +41,13 @@ public class UserController {
     }
 
 
-    @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody UserDto userDto) {
-        User savedUser = userService.saveUser(userDto);
-        return ResponseEntity.ok(savedUser);
+   @PostMapping("")
+    public User saveUser(@RequestBody User user){
+        return userRepository.save(user);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteUser(@PathVariable("id") long id){
+    public void deleteUser(@PathVariable("id") int id){
         userRepository.deleteById(id);
     }
 }

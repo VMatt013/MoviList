@@ -5,17 +5,77 @@
     <img [src]="movie.movieImageUrl" alt="{{ movie.movieTitle }}">
   </div>
 
-  <!-- Movie Information -->
   <div class="movie-info-container">
     <h1 class="movie-title">{{ movie.movieTitle }}</h1>
     <p class="movie-description">{{ movie.movieDescription }}</p>
 
     <div class="movie-meta">
       <p><strong>Release Date:</strong> {{ movie.movieReleaseDate }}</p>
-      <p><strong>Genre:</strong> {{ movie.genreName }}</p>
+      <p><strong>Genre:</strong> {{ movie.genre?.name }}</p>
     </div>
 
-  </div>
+    <!-- Admin Actions -->
+    <div *ngIf="userRole === 'Admin'" class="admin-actions">
+      <button (click)="editMovie(movieId)" class="btn edit-btn">Edit</button>
+      <button (click)="deleteMovie(movieId)" class="btn delete-btn">Delete</button>
+    </div>
 
+    <!-- User Actions -->
+    <div *ngIf="userRole === 'User'" class="user-actions">
+      <button *ngIf="!isInList" (click)="addMovieToList(movie)" class="btn add-to-list-btn">Add to List</button>
+
+      <!-- Show Rating and Status if the Movie is in the List -->
+      <div *ngIf="isInList">
+        <button (click)="saveUserMovie()" class="btn save-btn">Save</button>
+
+        <!-- Status Selection -->
+        <div class="status-update">
+          <label for="movieStatus">Update Status:</label>
+          <select id="movieStatus" [(ngModel)]="userMovie.status.id">
+            <option *ngFor="let status of statuses" [ngValue]="status.id">
+              {{ status.name }}
+            </option>
+          </select>
+        </div>
+
+        <!-- Rating -->
+        <div class="rating-update">
+          <label for="movieRating">Your Rating:</label>
+          <input
+            id="movieRating"
+            type="number"
+            [(ngModel)]="userMovie.rating"
+            min="1"
+            max="10"
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit Movie Form -->
+    <div *ngIf="editMode" class="edit-movie-form">
+      <label for="title">Title:</label>
+      <input id="title" [(ngModel)]="updatedMovie.movieTitle" type="text" />
+
+      <label for="description">Description:</label>
+      <textarea id="description" [(ngModel)]="updatedMovie.movieDescription"></textarea>
+
+      <label for="releaseDate">Release Date:</label>
+      <input id="releaseDate" [(ngModel)]="updatedMovie.movieReleaseDate" type="date" />
+
+      <label for="imageUrl">Image URL:</label>
+      <input id="imageUrl" [(ngModel)]="updatedMovie.movieImageUrl" type="text" />
+
+      <label for="genre">Genre:</label>
+      <select id="genre" [(ngModel)]="updatedMovie.genre">
+        <option *ngFor="let genre of genres" [ngValue]="genre">
+          {{ genre.name }}
+        </option>
+      </select>
+
+      <button (click)="saveMovie()" class="btn save-btn">Save</button>
+      <button (click)="cancelEdit()" class="btn cancel-btn">Cancel</button>
+    </div>
+  </div>
 </div>
 

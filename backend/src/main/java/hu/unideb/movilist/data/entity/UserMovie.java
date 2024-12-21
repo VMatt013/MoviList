@@ -1,54 +1,49 @@
+
 package hu.unideb.movilist.data.entity;
 
 import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
+@IdClass(UserMovieId.class)
 @Entity
 @Table(name = "userMovies")
 public class UserMovie {
 
-    @EmbeddedId
-    private UserMovieId id;
+    @Id
+    @Column(name = "user_id")
+    private int userId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId("userId")
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @Id
+    @Column(name = "movie_id")
+    private int movieId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId("movieId")
-    @JoinColumn(name = "movie_id", nullable = false)
-    private Movie movie;
-
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "status_id", nullable = false)
+    @JsonIgnore 
     private Status status;
 
-    @Column(name = "rating")
-    private int rating;
+    @Column(name = "rating", nullable = true) // Rating can be null
+    private Integer rating;
 
-    // Getters and Setters
-    public UserMovieId getId() {
-        return id;
+    @Transient
+    private UserMovieId id;
+
+    public UserMovie() {}
+
+    public int getUserId() {
+        return userId;
     }
 
-    public void setId(UserMovieId id) {
-        this.id = id;
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
-    public User getUser() {
-        return user;
+    public int getMovieId() {
+        return movieId;
     }
 
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public Movie getMovie() {
-        return movie;
-    }
-
-    public void setMovie(Movie movie) {
-        this.movie = movie;
+    public void setMovieId(int movieId) {
+        this.movieId = movieId;
     }
 
     public Status getStatus() {
@@ -59,12 +54,21 @@ public class UserMovie {
         this.status = status;
     }
 
-    public int getRating() {
+    public Integer getRating() {
         return rating;
     }
 
-    public void setRating(int rating) {
+    public void setRating(Integer rating) {
         this.rating = rating;
+    }
+
+    public UserMovieId getId() {
+        return new UserMovieId(this.userId, this.movieId);
+    }
+
+    public void setId(UserMovieId id) {
+        this.userId = id.getUserId();
+        this.movieId = id.getMovieId();
     }
 }
 

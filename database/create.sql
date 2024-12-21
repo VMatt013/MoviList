@@ -1,9 +1,10 @@
+
 DROP DATABASE IF EXISTS movilist;
 CREATE DATABASE movilist;
 USE movilist;
 
 CREATE TABLE roles (
-   id INT not null auto_increment primary key,
+   id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
    name VARCHAR(500)
 );
 
@@ -22,10 +23,9 @@ CREATE TABLE users (
    username VARCHAR(100),
    email VARCHAR(150) UNIQUE,
    password VARCHAR(1000),
-   role_id INT default 2 NOT NULL,
-   constraint FK_users_role_id foreign key(role_id) references roles(id)
+   role_id INT DEFAULT 2 NOT NULL,
+   CONSTRAINT FK_users_role_id FOREIGN KEY (role_id) REFERENCES roles(id) ON DELETE CASCADE
 );
-
 
 CREATE TABLE movies (
     id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
@@ -34,15 +34,5 @@ CREATE TABLE movies (
     release_date DATE,
     genre_id INT,
     image_url VARCHAR(250),
-    FOREIGN KEY (genre_id) REFERENCES genres(id)
-);
-
-CREATE TABLE userMovies (
-    user_id INT,
-    movie_id INT,
-    status_id INT,
-    rating INT DEFAULT NULL,
-    FOREIGN KEY (user_id) REFERENCES users(id),
-    FOREIGN KEY (movie_id) REFERENCES movies(id),
-    FOREIGN KEY (status_id) REFERENCES status(id)
+    CONSTRAINT FK_movies_genre_id FOREIGN KEY (genre_id) REFERENCES genres(id) ON DELETE CASCADE
 );

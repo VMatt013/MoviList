@@ -1,38 +1,42 @@
 package hu.unideb.movilist.service;
 
 import hu.unideb.movilist.data.entity.User;
-import hu.unideb.movilist.data.entity.Role;
 import hu.unideb.movilist.data.repository.UserRepository;
-import hu.unideb.movilist.data.repository.RoleRepository;
-import hu.unideb.movilist.service.dto.UserDto;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
 import java.util.Optional;
+import java.util.Collections;
+
 
 @Service
 public class UserService {
-
     @Autowired
-    private UserRepository userRepository;
+    UserRepository repository;
 
-    @Autowired
-    private RoleRepository roleRepository;
+    public UserDetailsService userDetailsService() {
 
-    public User saveUser(UserDto userDto) {
-        // Fetch the Role entity using the roleId from the DTO
-        Role role = roleRepository.findById(userDto.getRoleId())
-                .orElseThrow(() -> new IllegalArgumentException("Invalid role ID: " + userDto.getRoleId()));
-
-        // Build the User entity
-        User user = User.builder()
-                .username(userDto.getUsername())
-                .email(userDto.getEmail())
-                .role(role) // Assign the Role object
-                .password(userDto.getPassword())
-                .build();
-
-        // Save and return the User entity
-        return userRepository.save(user);
+        return new UserDetailsService() {
+            @Override
+            public UserDetails loadUserByUsername(String email) {
+                User user = repository.findByEmail(email);
+                user.authorities.add(new SimpleGrantedAuthority(user.getRole().getRoleName()));
+                return user;
+            }
+        };
     }
+    public boolean hasId(int id){
+        String username =  ((UserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+        User user = repository.findByEmail(username);
+        return user.getId() == id;
+
+    }
+
 }
+
+

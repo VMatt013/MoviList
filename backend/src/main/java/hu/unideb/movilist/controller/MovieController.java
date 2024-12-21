@@ -30,7 +30,7 @@ public class MovieController {
     }
 
     @GetMapping("/{id}")
-    public Movie getMovie(@PathVariable("id") long id) {
+    public Movie getMovie(@PathVariable("id") int id) {
 
         Movie movie = movieRepository.findById(id).orElseThrow(() ->
                 new RuntimeException("Movie not found with id: " + id));
@@ -44,7 +44,12 @@ public class MovieController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteMovie(@PathVariable("id") long id){
+    public void deleteMovie(@PathVariable("id") int id){
         movieRepository.deleteById(id);
+    }
+
+    @PutMapping("/{id}")
+    public Movie updateMovie(@PathVariable("id") int id, @RequestBody Movie movie){
+        return movieRepository.save(movie);
     }
 }

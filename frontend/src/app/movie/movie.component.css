@@ -52,6 +52,97 @@
   color: #000;
 }
 
+.admin-actions,
+.user-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.btn {
+  padding: 10px 16px;
+  border-radius: 6px;
+  font-size: 1rem;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.edit-btn {
+  background-color: #007bff;
+  color: white;
+}
+
+.edit-btn:hover {
+  background-color: #0056b3;
+}
+
+.delete-btn {
+  background-color: #dc3545;
+  color: white;
+}
+
+.delete-btn:hover {
+  background-color: #a71d2a;
+}
+
+.save-btn {
+  background-color: #28a745;
+  color: white;
+}
+
+.save-btn:hover {
+  background-color: #1e7e34;
+}
+
+.cancel-btn {
+  background-color: #6c757d;
+  color: white;
+}
+
+.cancel-btn:hover {
+  background-color: #5a6268;
+}
+
+.edit-movie-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background-color: #ffffff;
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-top: 16px;
+}
+
+.edit-movie-form label {
+  font-size: 1rem;
+  font-weight: bold;
+  margin-bottom: 4px;
+  color: #333;
+}
+
+.edit-movie-form input,
+.edit-movie-form textarea,
+.edit-movie-form select {
+  width: 100%;
+  padding: 8px;
+  font-size: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.edit-movie-form input:focus,
+.edit-movie-form textarea:focus,
+.edit-movie-form select:focus {
+  border-color: #007bff;
+}
+
+.edit-movie-form textarea {
+  resize: vertical;
+}
+
 .additional-info h3 {
   margin-top: 16px;
   font-size: 1.5rem;
@@ -72,3 +163,4 @@
   font-size: 0.9rem;
   color: #555;
 }
+

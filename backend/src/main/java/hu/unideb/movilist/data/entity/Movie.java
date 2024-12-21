@@ -18,7 +18,7 @@ public class Movie {
     @Column(name="release_date")
     private String movieReleaseDate;
 
-   @OneToOne
+    @OneToOne
     @JoinColumn(name = "genre_id", referencedColumnName = "id")
     private Genre movieGenre;
     
@@ -74,7 +74,7 @@ public class Movie {
     public Genre getGenre() {
         return this.movieGenre;
     }
-    public void setMovieGenreId(Genre genre) {
+    public void setMovieGenre(Genre genre) {
         this.movieGenre = genre;
     }
 

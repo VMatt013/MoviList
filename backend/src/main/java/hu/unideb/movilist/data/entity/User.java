@@ -2,7 +2,11 @@ package hu.unideb.movilist.data.entity;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import jakarta.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import lombok.*;
+import java.util.*;
+
 
 @Entity
 @Table(name = "users")
@@ -10,7 +14,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class User {
+public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,8 +33,11 @@ public class User {
         return role.getRoleName();
     }
 
+    @Transient
+    public Collection<GrantedAuthority> authorities = new ArrayList<>();
 
-    User(String username, String email, String password, Role role) {
+
+    public User(String username, String email, String password) {
         this.username = username;
         this.email = email;
         this.password = password;
@@ -44,9 +51,11 @@ public class User {
         this.id = id;
     }
 
+    @Override
     public String getUsername() {
-        return username;
+        return email;
     }
+
 
     public void setUsername(String username) {
         this.username = username;
@@ -60,10 +69,11 @@ public class User {
         this.email = email;
     }
 
+    @Override
     public String getPassword() {
         return password;
     }
-
+    
     public void setPassword(String password) {
         this.password = password;
     }
@@ -74,6 +84,11 @@ public class User {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities(){
+        return authorities;
     }
 
   }

@@ -7,7 +7,6 @@
 
         <input type="text" class="form-control" id="username" formControlName="username"
           placeholder="Enter your username" required>
-
         <div *ngIf="registrationForm.get('username')?.touched && registrationForm.get('username')?.invalid">
           <small *ngIf="registrationForm.get('username')?.errors?.['required']" class="error text-danger">
             Username is required.
@@ -23,10 +22,8 @@
             format.</small>
         </div>
 
-
         <input type="password" class="form-control" id="password" formControlName="password"
           placeholder="Enter your password" required>
-
 
         <div *ngIf="registrationForm.get('password')?.touched && registrationForm.get('password')?.invalid">
           <small *ngIf="registrationForm.get('password')?.errors?.['required']" class="text-danger">Password is
@@ -35,10 +32,18 @@
             characters.</small>
         </div>
 
-
         <button type="submit" class="btn btn-primary w-100">Register</button>
+
+        <!-- Success and Error Feedback -->
+        <div *ngIf="successMessage" class="alert alert-success mt-2">
+          {{ successMessage }}
+        </div>
+        <div *ngIf="errorMessage" class="alert alert-danger mt-2">
+          {{ errorMessage }}
+        </div>
 
       </form>
     </div>
   </div>
 </div>
+

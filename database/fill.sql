@@ -1,3 +1,11 @@
+DELETE FROM userMovies;
+DELETE FROM roles;
+DELETE FROM genres;
+DELETE FROM status;
+DELETE FROM users;
+DELETE FROM movies;
+
+
 INSERT INTO roles (name) VALUES
 ('Admin'),
 ('User');
@@ -26,7 +34,6 @@ INSERT INTO genres (name) VALUES
 ('Superhero'),
 ('Sports');
 
-
 INSERT INTO status (name) VALUES
 ('Planned'),
 ('Watching'),
@@ -34,10 +41,8 @@ INSERT INTO status (name) VALUES
 ('Dropped');
 
 INSERT INTO users (username, email, password, role_id) VALUES
-('admin_user', 'admin@example.com', 'hashedpassword123', 1),
-('john_doe', 'john.doe@example.com', 'hashedpassword456', 2),
-('jane_doe', 'jane.doe@example.com', 'hashedpassword789', 2);
-
+('admin', 'admin@gmail.com', '$2a$10$px0lHQ5PGn.8DEG3eLx91eNQqpoHEvmYT5Ikxx5iWRuFQJnTqGg0y', 1),
+('user', 'user@gmail.com', '$2a$10$lJjhn56kIlwI6rpRucNr1uIE5IKLhrwRtRhVNM3lFRBh4MQcAvnc.', 2);
 
 INSERT INTO movies (title, description, release_date, genre_id, image_url) VALUES
 ('The Dark Knight', 'Batman faces off against the Joker, a criminal mastermind who wants to plunge Gotham City into anarchy.', '2008-07-18', 20, 'https://www.themoviedb.org/t/p/w600_and_h900_bestv2/qJ2tW6WMUDux911r6m7haRef0WH.jpg'),
@@ -64,14 +69,3 @@ INSERT INTO movies (title, description, release_date, genre_id, image_url) VALUE
 ('Dune', 'A young nobleman becomes embroiled in a war for control over the desert planet Arrakis, the galaxy\'s only source of the spice melange.', '2021-10-22', 5, 'https://www.themoviedb.org/t/p/w600_and_h900_bestv2/d5NXSklXo0qyIYkgV94XAgMIckC.jpg'),
 ('Coco', 'Aspiring musician Miguel enters the Land of the Dead to find his great-great-grandfather, a legendary singer.', '2017-11-22', 12, 'https://www.themoviedb.org/t/p/w600_and_h900_bestv2/gGEsBPAijhVUFoiNpgZXqRVWJt2.jpg'),
 ('Black Panther', 'T\'Challa returns home to Wakanda to take his place as king, but faces a challenge to his throne and a threat to his kingdom.', '2018-02-16', 20, 'https://www.themoviedb.org/t/p/w600_and_h900_bestv2/uxzzxijgPIY7slzFvMotPv8wjKA.jpg');
-
-INSERT INTO userMovies (user_id, movie_id, status_id, rating) VALUES
-(2, 1, 2, 9),  -- John Doe is watching Inception
-(2, 3, 3, 10), -- John Doe completed Forrest Gump
-(3, 4, 1, NULL), -- Jane Doe plans to watch The Matrix
-(3, 6, 4, NULL), -- Jane Doe dropped Get Out
-(2, 2, 3, 10), -- John Doe completed The Dark Knight
-(3, 5, 3, 8); -- Jane Doe completed The Notebook
-
-
-

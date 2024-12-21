@@ -1,32 +1,35 @@
+
 import { Component } from '@angular/core';
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {CommonModule} from '@angular/common';
-import {HttpClient, HttpClientModule} from '@angular/common/http';
-import {catchError, throwError} from 'rxjs';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-
 import { BackendService } from '../services/backend.service';
-
+import { catchError } from 'rxjs/operators';
+import { of } from 'rxjs';  // Import `of` to return observable for error handling
 
 interface RegistrationData {
   username: string;
   email: string;
   password: string;
-  roleId: number;
 }
+
 @Component({
   selector: 'app-registration',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, HttpClientModule],
+  imports: [CommonModule, ReactiveFormsModule], // Import only necessary modules
   templateUrl: './registration.component.html',
-  styleUrl: './registration.component.css'
+  styleUrls: ['./registration.component.css']
 })
-export class RegistrationComponent{
-
-
+export class RegistrationComponent {
   registrationForm: FormGroup;
+  errorMessage: string = ''; // To store error messages
+  successMessage: string = ''; // To store success messages
 
- constructor(private fb: FormBuilder, private http: HttpClient, private router: Router,private backendService: BackendService) {
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    private backendService: BackendService
+  ) {
     this.registrationForm = this.fb.group({
       username: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
@@ -34,13 +37,32 @@ export class RegistrationComponent{
     });
   }
 
-  onRegistration(): void {
-      if (this.registrationForm.valid) {
-        const registrationData: RegistrationData = this.registrationForm.value;
-        registrationData.roleId = 2;
+  setToken(response: string): void {
+    sessionStorage.setItem('token', response);
+    this.successMessage = 'Registration successful!'; // Set success message
+  }
 
-        this.backendService.addUser(registrationData).subscribe(response => {
-        });
-      }
+  onRegistration(): void {
+    if (this.registrationForm.valid) {
+      const registrationData: RegistrationData = this.registrationForm.value;
+
+      this.backendService.addUser(registrationData).pipe(
+        catchError(err => {
+          this.errorMessage = 'Registration failed. Please try again.'; // Set error message
+          return of(err); // Return an observable to continue the flow
+        })
+      ).subscribe({
+        next: (response) => {
+          console.log('Registration successful!', response);
+          this.setToken(response);
+          this.router.navigate(['/']); // Navigate to login page
+        },
+        error: () => {
+          console.error('Registration failed');
+          // Feedback message is already handled in the catchError
+        }
+      });
+    }
   }
 }
+
