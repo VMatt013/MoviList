@@ -3,6 +3,8 @@ package hu.unideb.movilist.controller;
 
 import hu.unideb.movilist.data.entity.Movie;
 import hu.unideb.movilist.data.repository.MovieRepository;
+import hu.unideb.movilist.service.MovieService;
+
 
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +19,11 @@ import java.util.stream.Collectors;
 public class MovieController {
     @Autowired
     private MovieRepository movieRepository;
+    private final MovieService movieService;
 
+     public MovieController(MovieService movieService) {
+        this.movieService = movieService;
+    }
 
     @GetMapping("")
     public ResponseEntity<List<Movie>> getAllMovies() {
@@ -36,6 +42,12 @@ public class MovieController {
                 new RuntimeException("Movie not found with id: " + id));
 
         return movie;
+    }
+
+    @GetMapping("/featured")
+    public ResponseEntity<List<Movie>> getFeaturedMovies() {
+        List<Movie> featuredMovies = movieService.getFeaturedMovies();
+        return new ResponseEntity<>(featuredMovies, org.springframework.http.HttpStatus.OK);
     }
 
     @PostMapping()

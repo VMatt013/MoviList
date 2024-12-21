@@ -1,1 +1,35 @@
-<p>home works!</p>
+<div class="home-container">
+
+  <section class="hero">
+    <div class="hero-content">
+      <h1>Welcome to Movilist</h1>
+      <p>Discover and manage your favorite movies.</p>
+      <div class="hero-buttons">
+        <a routerLink="/movies" class="btn btn-primary">Browse Movies</a>
+        <a *ngIf="!authService.isLoggedIn()" routerLink="/login" class="btn btn-primary">Log In</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="featured-movies">
+    <h2>Featured Movies</h2>
+    <div class="movie-grid">
+      <div *ngFor="let movie of featuredMovies" class="movie-card" (click)="navigateToMovie(movie.movieId)">
+        <img [src]="movie.movieImageUrl" alt="{{ movie.movieTitle }}" *ngIf="movie.movieImageUrl">
+      </div>
+    </div>
+    <div class="no-movies" *ngIf="featuredMovies.length === 0">
+      <p>No featured movies yet.</p>
+    </div>
+  </section>
+
+  <section class="about">
+    <h2>About Movilist</h2>
+    <p>
+      Movilist is a platform designed to help you keep track of the movies you've watched, want to watch, and your
+      ratings.
+      Whether you're a casual moviegoer or a dedicated cinephile, Movilist provides tools to manage your movie
+      collection and discover new films.
+    </p>
+  </section>
+</div>

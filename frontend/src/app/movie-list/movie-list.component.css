@@ -1,4 +1,3 @@
-
 /* Title Styling */
 h2 {
     text-align: center;
@@ -20,37 +19,19 @@ body {
     padding-top: 20px;
 }
 
-/* Add Movie Button Styling */
-button.btn-success {
-    font-size: 16px;
-    display: inline-flex;
-    align-items: center;
-    background-color: #28a745; /* Green background */
-    color: white;
-    padding: 10px 15px;
-    border-radius: 5px;
-    border: none;
-}
-
-button.btn-success .plus-sign {
-    font-size: 20px;
-    margin-right: 8px;
-}
-
-/* Movie Card Styling */
+/* Card Styling */
 .card {
     position: relative;
     overflow: hidden;
     border: none;
     border-radius: 8px;
-    height: 100%; /* Ensure all cards have consistent height */
+    height: 100%;
     margin-bottom: 20px;
     background-color: #1e1e1e; /* Dark background for cards */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
     transition: box-shadow 0.3s ease, transform 0.3s ease;
 }
 
-/* Hover Effect on Card */
 .card:hover {
     transform: scale(1.05);
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5); /* Enhanced shadow on hover */
@@ -58,7 +39,6 @@ button.btn-success .plus-sign {
 
 /* Card Image */
 .card-img-top {
-    min-height: 300px;
     width: 100%;
     height: 300px;
     object-fit: cover;
@@ -128,6 +108,7 @@ button.btn-success .plus-sign {
     font-size: 1.2rem;
 }
 
+/* Responsive Adjustments */
 @media (max-width: 768px) {
     .card-body {
         font-size: 14px;
@@ -142,4 +123,3 @@ button.btn-success .plus-sign {
         font-size: 12px;
     }
 }
-

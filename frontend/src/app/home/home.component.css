@@ -1,0 +1,137 @@
+
+/* Global Body Styles */
+body {
+    background-color: #121212;
+    color: #eee;
+}
+
+/* Container Styling */
+.container {
+    background-color: #1e1e1e;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+}
+
+/* Home Page Styles - Hero Section */
+.home-container .hero {
+    padding: 40px 0;
+    margin-bottom: 40px;
+    margin-top: 40px;
+    background-color: #212529;
+    border-radius: 8px;
+}
+
+.home-container .hero .hero-content {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.home-container .hero h1 {
+    margin-bottom: 20px;
+    color: #fff;
+}
+
+.home-container .hero p {
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+}
+
+.home-container .hero .hero-buttons .btn {
+    margin: 0 10px;
+    font-size: 1rem;
+    padding: 12px 24px;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+.home-container .hero .hero-buttons .btn-primary {
+    background-color: #42a5f5;
+    color: #fff;
+}
+
+.home-container .hero .hero-buttons .btn-primary:hover {
+    background-color: #64b5f6;
+}
+
+.home-container .hero .hero-buttons .btn-secondary {
+    background-color: #757575;
+    color: #fff;
+}
+
+.home-container .hero .hero-buttons .btn-secondary:hover {
+    background-color: #616161;
+}
+
+/* Featured Movies Section */
+.home-container .featured-movies {
+    margin-bottom: 40px;
+    color: #fff;
+}
+
+.home-container .featured-movies h2 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+
+.home-container .movie-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-gap: 20px;
+}
+
+.home-container .movie-card {
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.home-container .movie-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.home-container .movie-card img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* No Movies Section */
+.home-container .no-movies {
+    text-align: center;
+    font-style: italic;
+    color: #777;
+}
+
+/* About Section */
+.home-container .about {
+    text-align: justify;
+    color: #eee;
+}
+
+.home-container .about h2 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+
+.home-container .about p {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #B0B0B0;
+}
+

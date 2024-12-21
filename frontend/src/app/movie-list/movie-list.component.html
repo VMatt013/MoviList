@@ -1,0 +1,28 @@
+<h2 *ngIf="userId == pvUserId">My List</h2>
+<h2 *ngIf="userId != pvUserId">{{pvUsername}}'s List</h2>
+
+<div>
+  <div class="container mt-4">
+    <div class="row g-4">
+      <!-- If no movies found -->
+      <div class="col-12" *ngIf="movies.length === 0">
+        <p class="text-center">No movies found. Add a new movie!</p>
+      </div>
+
+      <!-- Movie card for each movie -->
+      <div class="col-md-4 col-lg-2" *ngFor="let movie of movies">
+        <div class="card h-100">
+          <img [src]="movie.movieImageUrl" class="card-img-top" alt="{{ movie.movieTitle }}">
+          <div class="card-body">
+              <a class="movie-title nav-link" routerLink="/movies/{{ movie.movieId }}">{{ movie.movieTitle }}</a>
+              <div class="movie-info">
+                <p class="movie-year">{{ movie.year }}</p>
+                <p class="movie-genre">{{ movie.genreName }}</p>
+              </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

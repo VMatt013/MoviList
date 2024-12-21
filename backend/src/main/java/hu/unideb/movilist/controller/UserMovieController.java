@@ -24,15 +24,39 @@ public class UserMovieController {
         return new ResponseEntity<>(createdUserMovie, HttpStatus.CREATED);
     }
 
-    @GetMapping("/{userId}/{movieId}")
-    public ResponseEntity<UserMovie> getUserMovie(@PathVariable int userId, @PathVariable int movieId) {
-        UserMovieId id = new UserMovieId(userId, movieId);
-        UserMovie userMovie = userMovieService.getById(id);
-        if (userMovie == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(userMovie, HttpStatus.OK);
+@GetMapping("/{userId}")
+    public ResponseEntity<List<UserMovie>> getUserMoviesByUserId(@PathVariable int userId) {
+        List<UserMovie> userMovies = userMovieService.getUserMoviesByUserId(userId);
+        return new ResponseEntity<>(userMovies, HttpStatus.OK);
     }
+
+
+@GetMapping("/{userId}/{movieId}")
+public ResponseEntity<UserMovieDto> getUserMovie(@PathVariable int userId, @PathVariable int movieId) {
+    UserMovieId id = new UserMovieId(userId, movieId);
+    UserMovie userMovie = userMovieService.getById(id);
+
+    if (userMovie == null) {
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    UserMovieDto dto = convertToDto(userMovie); // Use conversion method
+
+    return new ResponseEntity<>(dto, HttpStatus.OK);
+}
+
+private UserMovieDto convertToDto(UserMovie userMovie) {
+    UserMovieDto dto = new UserMovieDto();
+    dto.setUserId(userMovie.getUserId());
+    dto.setMovieId(userMovie.getMovieId());
+    if (userMovie.getStatus() != null) { // Check for null status
+        StatusDto statusDto = new StatusDto();
+        statusDto.setId(userMovie.getStatus().getId());
+        dto.setStatus(statusDto);
+    }
+    dto.setRating(userMovie.getRating());
+    return dto;
+}
 
     @GetMapping
     public ResponseEntity<List<UserMovie>> getAllUserMovies() {
@@ -56,6 +80,19 @@ public class UserMovieController {
 
         return new ResponseEntity<>(updatedUserMovie, HttpStatus.OK);
     }
+
+@DeleteMapping("/{userId}/{movieId}")
+public ResponseEntity<Void> deleteUserMovie(@PathVariable int userId, @PathVariable int movieId) {
+    UserMovieId id = new UserMovieId(userId, movieId);
+    UserMovie userMovie = userMovieService.getById(id);
+
+    if (userMovie == null) {
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND); // Return 404 if the UserMovie is not found
+    }
+
+    userMovieService.delete(id); // Call the service method to delete the UserMovie
+    return new ResponseEntity<>(HttpStatus.NO_CONTENT); // Return 204 No Content on successful deletion
+}
 
     private UserMovie convertToEntity(UserMovieDto userMovieDto) {
         UserMovie userMovie = new UserMovie();

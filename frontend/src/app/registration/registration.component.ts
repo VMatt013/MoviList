@@ -3,20 +3,16 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { BackendService } from '../services/backend.service';
+import { AuthService } from '../services/auth.service';
 import { catchError } from 'rxjs/operators';
-import { of } from 'rxjs';  // Import `of` to return observable for error handling
-
-interface RegistrationData {
-  username: string;
-  email: string;
-  password: string;
-}
+import { of } from 'rxjs';
 
 @Component({
   selector: 'app-registration',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule], // Import only necessary modules
+  imports: [CommonModule, ReactiveFormsModule,RouterModule],
   templateUrl: './registration.component.html',
   styleUrls: ['./registration.component.css']
 })
@@ -28,7 +24,8 @@ export class RegistrationComponent {
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private backendService: BackendService
+    private backendService: BackendService,
+    private authService: AuthService
   ) {
     this.registrationForm = this.fb.group({
       username: ['', Validators.required],
@@ -37,14 +34,9 @@ export class RegistrationComponent {
     });
   }
 
-  setToken(response: string): void {
-    sessionStorage.setItem('token', response);
-    this.successMessage = 'Registration successful!'; // Set success message
-  }
-
   onRegistration(): void {
     if (this.registrationForm.valid) {
-      const registrationData: RegistrationData = this.registrationForm.value;
+      const registrationData = this.registrationForm.value;
 
       this.backendService.addUser(registrationData).pipe(
         catchError(err => {
@@ -54,14 +46,18 @@ export class RegistrationComponent {
       ).subscribe({
         next: (response) => {
           console.log('Registration successful!', response);
-          this.setToken(response);
-          this.router.navigate(['/']); // Navigate to login page
+          this.authService.setToken(response); // Use AuthService to set token
+          this.successMessage = 'Registration successful!'; // Display success message
+          this.errorMessage = ''; // Clear any previous error messages
+          setTimeout(() => this.router.navigate(['/']), 2000); // Navigate to the main page after 2 seconds
         },
         error: () => {
           console.error('Registration failed');
           // Feedback message is already handled in the catchError
         }
       });
+    } else {
+      this.errorMessage = 'Please fill in all fields correctly.';
     }
   }
 }

@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
 import { BackendService } from '../services/backend.service';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-movie',
@@ -14,6 +15,8 @@ import { BackendService } from '../services/backend.service';
   styleUrls: ['./movie.component.css']
 })
 export class MovieComponent implements OnInit {
+ errorMessage: string = ''; // To store error messages
+  successMessage: string = ''; // To store success messages
   movie: any;
   movieId: number = 0;
   userRole: string | null = null;
@@ -23,7 +26,7 @@ export class MovieComponent implements OnInit {
   statuses: { id: number; name: string }[] = [];
   userId: number = 0;
   isInList: boolean = false;
-userMovie: {
+  userMovie: {
   status: { id: number },
   rating: number | null,
   userId: number,
@@ -35,34 +38,41 @@ userMovie: {
   movieId: 0
 };
 
-  constructor(private router: Router, private route: ActivatedRoute, private backendService: BackendService) {}
+  constructor(private router: Router, private route: ActivatedRoute, private backendService: BackendService, public authService: AuthService) {}
 
   ngOnInit(): void {
-    this.userRole = sessionStorage.getItem('role');
-    this.userId = parseInt(sessionStorage.getItem('id') || '', 0);
-    this.movieId = parseInt(this.route.snapshot.paramMap.get('movieId') || '', 10);
+        this.authService.userRole$.subscribe(role => this.userRole = role);
+        this.authService.userId$.subscribe(id => this.userId = parseInt(id, 10));
 
     this.route.paramMap.subscribe(params => {
       const id = params.get('movieId');
+      if (id === "add") {
+        this.editMode = true;
+        this.movieId = 0;
+        return;
+      }
+
       this.movieId = id ? parseInt(id, 10) : 0;
-      this.loadMovie();
     });
 
-    this.loadGenres();
-    this.loadStatuses();
-    this.isMovieInList();
-  }
+
+    if (!this.editMode) {
+      this.loadMovie();
+      this.loadStatuses();
+      this.isMovieInList();
+      }
+
+      this.loadGenres();
+    }
 
   isMovieInList(): void {
        this.backendService.getUserMovie(this.userId, this.movieId).subscribe(
       (data) => {
-        console.log(data);
         this.isInList = true;
         this.userMovie.status.id = data.status.id;
         this.userMovie.rating = data.rating;
         this.userMovie.userId = data.userId;
         this.userMovie.movieId = data.movieId;
-        console.log(this.userMovie);
       },
       (error) => {
         this.isInList = false;
@@ -78,15 +88,34 @@ userMovie: {
       rating: null
     };
 
+
     this.backendService.createUserMovie(payload, this.userId, this.movieId).subscribe(
       () => {
         console.log('User movie added successfully');
+        this.userMovie.status.id = payload.status.id;
+        this.userMovie.rating = payload.rating;
+        this.userMovie.userId = this.userId;
+        this.userMovie.movieId = this.movieId;
+
       },
       (error) => {
         console.error('Error adding user movie:', error);
       }
     );
   }
+
+  removeMovieFromList(movieId: number) {
+        this.backendService.deleteUserMovie(this.userId, movieId).subscribe(
+            () => {
+                console.log('User movie removed successfully');
+                this.isInList = false;
+            },
+            (error) => {
+                console.error('Error removing user movie:', error);
+            }
+        );
+    }
+
 
   loadGenres() {
     this.backendService.getGenres().subscribe(
@@ -155,6 +184,9 @@ userMovie: {
   }
 
   cancelEdit() {
+    if (this.movieId === 0) {
+      this.router.navigate(['/movies']);
+    }
     this.editMode = false;
     this.updatedMovie = {};
   }
@@ -200,9 +232,13 @@ userMovie: {
 
     this.backendService.createUserMovie(payload, this.userId, this.movieId).subscribe(
       () => {
+        this.successMessage = 'Movie status updated successfully';
+        this.errorMessage = '';
         console.log('User movie saved successfully');
       },
       (error) => {
+        this.errorMessage = 'Error adding movie to list';
+        this.successMessage = '';
         console.error('Error saving user movie:', error);
       }
     );

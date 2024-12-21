@@ -62,7 +62,7 @@ public class User implements UserDetails {
     }
 
     public String getEmail() {
-        return email;
+        return username;
     }
 
     public void setEmail(String email) {

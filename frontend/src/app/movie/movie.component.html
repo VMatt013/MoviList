@@ -1,81 +1,86 @@
-
 <div class="movie-details-container">
-  <!-- Movie Poster -->
-  <div class="movie-poster">
-    <img [src]="movie.movieImageUrl" alt="{{ movie.movieTitle }}">
+  <div class="movie-poster" *ngIf="!editMode">
+    <img [src]="movie?.movieImageUrl" alt="{{ movie?.movieTitle }}">
   </div>
 
-  <div class="movie-info-container">
-    <h1 class="movie-title">{{ movie.movieTitle }}</h1>
-    <p class="movie-description">{{ movie.movieDescription }}</p>
+  <div class="movie-info-container" *ngIf="!editMode">
+    <div class="movie-title-description">
+      <h1 class="movie-title">{{ movie?.movieTitle }}</h1>
+      <p class="movie-description">{{ movie?.movieDescription }}</p>
+    </div>
 
     <div class="movie-meta">
-      <p><strong>Release Date:</strong> {{ movie.movieReleaseDate }}</p>
-      <p><strong>Genre:</strong> {{ movie.genre?.name }}</p>
+      <p><strong>Release Date:</strong> {{ movie?.movieReleaseDate }}</p>
+      <p><strong>Genre:</strong> {{ movie?.genre?.name }}</p>
     </div>
 
-    <!-- Admin Actions -->
-    <div *ngIf="userRole === 'Admin'" class="admin-actions">
-      <button (click)="editMovie(movieId)" class="btn edit-btn">Edit</button>
-      <button (click)="deleteMovie(movieId)" class="btn delete-btn">Delete</button>
-    </div>
 
-    <!-- User Actions -->
-    <div *ngIf="userRole === 'User'" class="user-actions">
-      <button *ngIf="!isInList" (click)="addMovieToList(movie)" class="btn add-to-list-btn">Add to List</button>
+    <div class="user-actions">
+      <button *ngIf="!isInList && userRole === 'User'" (click)="addMovieToList(movie)" class="btn btn-primary add-to-list-btn">
+        Add to List
+      </button>
 
-      <!-- Show Rating and Status if the Movie is in the List -->
+      <button *ngIf="isInList && authService.getUserIdInt() == userId" (click)="removeMovieFromList(movie.movieId)" class="btn btn-danger remove-from-list-btn">
+        Remove from List
+      </button>
+
       <div *ngIf="isInList">
-        <button (click)="saveUserMovie()" class="btn save-btn">Save</button>
+        <div class="rating-status-container">
+          <div class="rating-update">
+            <label for="movieRating">Your Rating:</label>
+            <input id="movieRating" type="number" [(ngModel)]="userMovie.rating" min="1" max="10" />
+          </div>
 
-        <!-- Status Selection -->
-        <div class="status-update">
-          <label for="movieStatus">Update Status:</label>
-          <select id="movieStatus" [(ngModel)]="userMovie.status.id">
-            <option *ngFor="let status of statuses" [ngValue]="status.id">
-              {{ status.name }}
-            </option>
-          </select>
+          <div class="status-update">
+            <label for="movieStatus">Update Status:</label>
+            <select id="movieStatus" [(ngModel)]="userMovie.status.id">
+              <option *ngFor="let status of statuses" [ngValue]="status.id">
+                {{ status.name }}
+              </option>
+            </select>
+          </div>
         </div>
-
-        <!-- Rating -->
-        <div class="rating-update">
-          <label for="movieRating">Your Rating:</label>
-          <input
-            id="movieRating"
-            type="number"
-            [(ngModel)]="userMovie.rating"
-            min="1"
-            max="10"
-          />
-        </div>
+        <button (click)="saveUserMovie()" class="btn btn-primary save-btn">Save</button>
       </div>
     </div>
 
-    <!-- Edit Movie Form -->
-    <div *ngIf="editMode" class="edit-movie-form">
-      <label for="title">Title:</label>
-      <input id="title" [(ngModel)]="updatedMovie.movieTitle" type="text" />
-
-      <label for="description">Description:</label>
-      <textarea id="description" [(ngModel)]="updatedMovie.movieDescription"></textarea>
-
-      <label for="releaseDate">Release Date:</label>
-      <input id="releaseDate" [(ngModel)]="updatedMovie.movieReleaseDate" type="date" />
-
-      <label for="imageUrl">Image URL:</label>
-      <input id="imageUrl" [(ngModel)]="updatedMovie.movieImageUrl" type="text" />
-
-      <label for="genre">Genre:</label>
-      <select id="genre" [(ngModel)]="updatedMovie.genre">
-        <option *ngFor="let genre of genres" [ngValue]="genre">
-          {{ genre.name }}
-        </option>
-      </select>
-
-      <button (click)="saveMovie()" class="btn save-btn">Save</button>
-      <button (click)="cancelEdit()" class="btn cancel-btn">Cancel</button>
+    <div *ngIf="userRole === 'Admin'" class="admin-actions">
+      <button (click)="editMovie(movieId)" class="btn btn-secondary edit-btn">Edit</button>
+      <button (click)="deleteMovie(movieId)" class="btn btn-danger delete-btn">Delete</button>
     </div>
-  </div>
-</div>
+<div *ngIf="successMessage" class="alert alert-success mt-2">
+          {{ successMessage }}
+        </div>
+        <div *ngIf="errorMessage" class="alert alert-danger mt-2">
+          {{ errorMessage }}
+        </div>
 
+
+  </div>
+
+  <div *ngIf="editMode" class="edit-movie-form">
+    <label for="title">Title:</label>
+    <input id="title" [(ngModel)]="updatedMovie.movieTitle" type="text" />
+
+    <label for="description">Description:</label>
+    <textarea id="description" [(ngModel)]="updatedMovie.movieDescription"></textarea>
+
+    <label for="releaseDate">Release Date:</label>
+    <input id="releaseDate" [(ngModel)]="updatedMovie.movieReleaseDate" type="date" />
+
+    <label for="imageUrl">Image URL:</label>
+    <input id="imageUrl" [(ngModel)]="updatedMovie.movieImageUrl" type="text" />
+
+    <label for="genre">Genre:</label>
+    <select id="genre" [(ngModel)]="updatedMovie.genre">
+      <option *ngFor="let genre of genres" [ngValue]="genre">
+        {{ genre.name }}
+      </option>
+    </select>
+
+    <button (click)="saveMovie()" class="btn btn-primary save-btn">Save</button>
+    <button (click)="cancelEdit()" class="btn btn-secondary cancel-btn">Cancel</button>
+  </div>
+
+
+</div>

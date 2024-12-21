@@ -47,6 +47,11 @@ public class UserMovieService {
         return repository.findAll();
     }
 
+   @Transactional(readOnly = true) // Mark as read-only for efficiency if not modifying data
+    public List<UserMovie> getUserMoviesByUserId(int userId) {
+        return repository.findByUserId(userId); // Assuming a findByUserId method exists in UserMovieRepository
+    } 
+
     public UserMovie update(UserMovie userMovie) {
         UserMovie existing = getById(userMovie.getId());
         if (existing == null) {

@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { BackendService } from './services/backend.service';
-import { UserService } from './services/user.service';
+import { AuthService } from './services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -14,18 +14,24 @@ import { UserService } from './services/user.service';
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
-export class AppComponent implements OnInit {
-  userRole: string | null = null;
-  userId: string | null = null;
 
+export class AppComponent implements OnInit{
+  title = 'Movilist';
+    userId: string = "";
+    userRole: string | null = null;
+    userName: string | null = null;
 
-  constructor(private userService: UserService) {}
+  constructor(public authService: AuthService,private router: Router,) {}
 
-  ngOnInit(): void {
-    this.userRole = sessionStorage.getItem('role');
-    this.userService.isLoggedIn(this.userRole);
+    ngOnInit() {
+        this.authService.userRole$.subscribe(role => this.userRole = role);
+        this.authService.userId$.subscribe(id => this.userId = id);
+        this.authService.userName$.subscribe(name => this.userName = name);
+    }
+
+  logout() {
+    this.authService.logout();
+    this.router.navigate(['/home']);
   }
-
 }
-
 

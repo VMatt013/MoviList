@@ -7,6 +7,8 @@ import {log} from '@angular-devkit/build-angular/src/builders/ssr-dev-server';
 import { Router } from '@angular/router';
 import { RouterModule } from '@angular/router';
 
+
+import { AuthService } from '../services/auth.service';
 import { BackendService } from '../services/backend.service';
 
 @Component({
@@ -21,15 +23,17 @@ export class MoviesComponent implements OnInit {
   movies: any[] = [];
   newMovie = {id: 0, movieTitle: '', description: '', release_date: '', rating: 0, genre_id: 0, image_url: ''};
   filteredMovies: any[] = [];
+  userRole: string | null = null;
 
 
-  constructor(private backendService: BackendService, private router: Router) {}
+  constructor(private backendService: BackendService, private router: Router,public authService: AuthService) {}
 
   ngOnInit(): void {
-    this.loadUsers();
+    this.authService.userRole$.subscribe(role => this.userRole = role);
+    this.loadMovies();
   }
 
-  loadUsers(): void {
+  loadMovies(): void {
     this.backendService.getMovies().subscribe(
       (data) => {
         this.movies = data;
@@ -37,6 +41,17 @@ export class MoviesComponent implements OnInit {
       },
       (error) => {
         console.error('Error fetching users:', error);
+      }
+    );
+  }
+
+  onAddMovie(): void {
+    this.backendService.addMovie(this.newMovie).subscribe(
+      (data) => {
+        this.loadMovies();
+      },
+      (error) => {
+        console.error('Error adding movie:', error);
       }
     );
   }

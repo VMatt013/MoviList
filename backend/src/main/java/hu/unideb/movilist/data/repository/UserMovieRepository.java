@@ -9,5 +9,5 @@ import java.util.List;
 
 @Repository
 public interface UserMovieRepository extends JpaRepository<UserMovie, UserMovieId> {
-    
+    List<UserMovie> findByUserId(int userId);
 }

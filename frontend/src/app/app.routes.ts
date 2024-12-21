@@ -6,6 +6,7 @@ import { MovieComponent } from './movie/movie.component';
 import { RegistrationComponent } from './registration/registration.component';
 import { LoginComponent } from './login/login.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import { MovieListComponent } from "./movie-list/movie-list.component";
 
 export const routes: Routes = [
     { path: '', redirectTo:'home', pathMatch: 'full' },
@@ -13,6 +14,7 @@ export const routes: Routes = [
     { path: 'users', component: UsersComponent },
     { path: 'movies', component: MoviesComponent },
     { path: 'movies/:movieId', component: MovieComponent },
+    { path: 'mylist/:userId', component: MovieListComponent },
     { path: 'registration', component: RegistrationComponent },
     { path: 'login', component: LoginComponent },
     { path: '**', component: PageNotFoundComponent },

@@ -6,6 +6,9 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { BackendService } from '../services/backend.service';
+import { RouterModule } from '@angular/router';
+import { AuthService } from '../services/auth.service';
+
 
 interface LoginData {
   email: string;
@@ -15,18 +18,21 @@ interface LoginData {
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, HttpClientModule],
+  imports: [CommonModule, ReactiveFormsModule, HttpClientModule, RouterModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
 export class LoginComponent {
 
   loginForm: FormGroup;
+  errorMessage: string = ''; // To store error messages
+  successMessage: string = '';
 
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private backendService: BackendService
+    private backendService: BackendService,
+    private authService: AuthService
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -54,9 +60,8 @@ export class LoginComponent {
 
       this.backendService.loginUser(loginData).subscribe({
         next: (response) => {
-          console.log('Login successful!', response);
-          this.setToken(response);
-          this.router.navigate(['/']); // Navigate to login page
+          this.authService.setToken(response);
+          this.router.navigate(['/']);
         },
         error: (err) => {
           console.error('Login failed', err);
